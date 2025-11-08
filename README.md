@@ -73,7 +73,89 @@ RAG-implementation-from-scratch/
 ├── utils.py             # Document loading utility
 ├── documents/           # Your .txt documents
 └── requirements.txt     # Dependencies
+```
 
+## Core Components
 
+### RAGPipeline Class
+
+**Main Methods:**
+
+- `chunk_text()` - Splits documents into retrievable chunks
+- `create_knowledge_base()` - Processes documents and builds indices
+- `similarity_search()` - Retrieves relevant chunks (semantic/keyword/hybrid)
+- `generate_response()` - Generates answers using retrieved context
+- `add_documents()` - Incrementally add new documents
+- `save_knowledge_base()` - Persist knowledge base and embeddings
+- `load_knowledge_base()` - Load previously saved data
+
+### Search Methods
+
+- **Semantic**: Vector similarity using embeddings
+- **Keyword**: BM25-based ranking
+- **Hybrid**: Combines semantic, keyword, and FAISS results
+
+### Utils Module
+
+`get_documents(doc_path)` - Loads all .txt files from a directory and returns list of document dictionaries.
+
+## Configuration
+
+Set in `main.py`:
+
+```python
+# Chunking
+chunking_method = "recursive"  # "fixed", "recursive", or "document"
+chunk_size = 256
+overlap = 20
+
+# Models (defaults to SmolLM2-360M-Instruct)
+embedding_model = "sentence-transformers/all-MiniLM-l6-v2"
+generator_model = "HuggingFaceTB/SmolLM2-360M-Instruct"
+```
+
+## Requirements
+
+- Python 3.8+
+- langchain-text-splitters
+- langchain-community
+- scikit-learn
+- faiss-cpu (or faiss-gpu)
+- rank-bm25
+- transformers
+- torch
+- numpy
+
+Install all: `pip install -r requirements.txt`
+
+## How It Works
+
+1. **Document Loading**: Load .txt files from a directory
+2. **Chunking**: Split documents using selected strategy
+3. **Embedding**: Convert chunks to vectors using embedding model
+4. **Indexing**: Build FAISS and BM25 indices for fast retrieval
+5. **Retrieval**: Find relevant chunks using chosen method
+6. **Generation**: Generate answer with LLM using retrieved context
+
+## Example Workflow
+
+```python
+# 1. Initialize
+rag = RAGPipeline()
+
+# 2. Create knowledge base
+docs = get_documents("./documents")
+rag.create_knowledge_base(docs)
+
+# 3. Query
+context = rag.similarity_search("What is X?", method="hybrid", top_k=3)
+
+# 4. Generate
+response = rag.generate_response("What is X?", context)
+print(response)
+
+# 5. Add more docs later
+new_docs = [...]
+rag.add_documents(new_docs)
 ```
 
