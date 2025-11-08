@@ -159,3 +159,17 @@ new_docs = [...]
 rag.add_documents(new_docs)
 ```
 
+## License
+
+MIT License - see LICENSE file for details.
+
+## Citation
+
+```bibtex
+@software{rag_implementation_2025,
+  title={RAG Implementation from Scratch},
+  author={Ani-404},
+  year={2025},
+  url={https://github.com/Ani-404/RAG-implementation-from-scratch}
+}
+```
