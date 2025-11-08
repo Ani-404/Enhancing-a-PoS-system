@@ -1,175 +1,124 @@
-# RAG Implementation from Scratch
+# Enhancing a PoS System
 
-A **Retrieval-Augmented Generation (RAG)** pipeline implementation for document-based question answering. This project demonstrates building a complete RAG system using custom retrievers, embeddings, and LLM-based generators.
+A data-driven approach to improving Point of Sale operations through predictive analytics and fraud detection. This project includes sales forecasting and online payment fraud detection models built on real transaction data.
 
 ## Overview
 
-This implementation combines semantic search, keyword-based retrieval, and text generation to answer queries based on your documents. It supports multiple chunking strategies and hybrid retrieval methods for accurate context retrieval.
+This hackathon project enhances PoS systems with two key machine learning capabilities:
+- Sales forecasting for inventory and resource planning
+- Fraud detection for secure online transactions
 
-## Key Features
+The analysis uses historical sales data and transaction patterns to provide actionable insights for retail operations.
 
-- **Text Chunking**: Fixed, recursive, or document-based splitting strategies
-- **Hybrid Retrieval**: Semantic search (embeddings), keyword search (BM25), and FAISS indexing
-- **Multiple Models**: Swap embedding and generator models from Hugging Face
-- **Knowledge Base Storage**: Save and load as JSON with embeddings as NumPy arrays
-- **LLM Generation**: Generates responses using retrieved context
+## Project Components
 
-## Quick Start
+### 1. Sales Forecasting
 
-### Installation
+Time series analysis and predictive modeling on historical sales data (2015-2018).
 
-```bash
-git clone https://github.com/Ani-404/RAG-implementation-from-scratch.git
-cd RAG-implementation-from-scratch
+**Key Details:**
+- Dataset: 9,800 transactions across multiple categories
+- Features: Order date, customer segment, region, product category, sales amount
+- Goal: Predict future sales trends for better inventory management
 
-pip install -r requirements.txt
-```
+**Data Overview:**
+- Average transaction value: $230.77
+- Sales range: $0.44 - $22,638.48
+- Coverage: 4 years of historical data
+- Categories: Furniture, Office Supplies, Technology
 
-### Usage
+**Approach:**
+- Temporal analysis of sales patterns
+- Seasonality and trend decomposition
+- Time series forecasting models
+- Regional and segment-based predictions
 
-**Basic command line:**
-```bash
-python main.py --query "Your question here?"
-```
+### 2. Online Payments Fraud Detection
 
-**Custom models:**
-```bash
-python main.py \
-  --query "Your question?" \
-  --embedder "sentence-transformers/all-MiniLM-l6-v2" \
-  --generator "HuggingFaceTB/SmolLM2-360M-Instruct" \
-  --doc_path "./documents"
-```
+Machine learning classification to identify fraudulent transactions in real-time.
 
-**Programmatic usage:**
-```python
-from rag_pipeline import RAGPipeline
-from utils import get_documents
+**Key Details:**
+- Model: Random Forest Classifier
+- Approach: Hyperparameter tuning with RandomizedSearchCV
+- Cross-validation: 5-fold CV for robust evaluation
+- Optimization: Tuning max_depth and n_estimators
 
-# Load documents
-documents = get_documents(doc_path='./documents')
-
-# Initialize pipeline
-rag = RAGPipeline(
-    embedding_model='sentence-transformers/all-MiniLM-l6-v2',
-    generator_model='HuggingFaceTB/SmolLM2-360M-Instruct'
-)
-
-# Create knowledge base
-rag.create_knowledge_base(documents, chunking_method='recursive', chunk_size=256, overlap=20)
-
-# Search and generate
-context = rag.similarity_search("Your question?", method='hybrid', top_k=3)
-response = rag.generate_response("Your question?", context)
-print(response)
-```
+**Workflow:**
+- Data preprocessing and feature engineering
+- Model training with parameter optimization
+- Performance evaluation and validation
+- Fraud pattern identification
 
 ## Project Structure
 
 ```
-RAG-implementation-from-scratch/
-├── main.py              # Entry point with CLI
-├── rag_pipeline.py      # Core RAGPipeline class
-├── utils.py             # Document loading utility
-├── documents/           # Your .txt documents
-└── requirements.txt     # Dependencies
+Enhancing-a-PoS-system/
+├── Sales_Forecasting.ipynb           # Sales prediction analysis
+├── online_payments_fraud_detection.ipynb  # Fraud detection model
+└── README.md
 ```
 
-## Core Components
+## Installation
 
-### RAGPipeline Class
-
-**Main Methods:**
-
-- `chunk_text()` - Splits documents into retrievable chunks
-- `create_knowledge_base()` - Processes documents and builds indices
-- `similarity_search()` - Retrieves relevant chunks (semantic/keyword/hybrid)
-- `generate_response()` - Generates answers using retrieved context
-- `add_documents()` - Incrementally add new documents
-- `save_knowledge_base()` - Persist knowledge base and embeddings
-- `load_knowledge_base()` - Load previously saved data
-
-### Search Methods
-
-- **Semantic**: Vector similarity using embeddings
-- **Keyword**: BM25-based ranking
-- **Hybrid**: Combines semantic, keyword, and FAISS results
-
-### Utils Module
-
-`get_documents(doc_path)` - Loads all .txt files from a directory and returns list of document dictionaries.
-
-## Configuration
-
-Set in `main.py`:
-
-```python
-# Chunking
-chunking_method = "recursive"  # "fixed", "recursive", or "document"
-chunk_size = 256
-overlap = 20
-
-# Models (defaults to SmolLM2-360M-Instruct)
-embedding_model = "sentence-transformers/all-MiniLM-l6-v2"
-generator_model = "HuggingFaceTB/SmolLM2-360M-Instruct"
+```bash
+git clone https://github.com/Ani-404/Enhancing-a-PoS-system.git
+cd Enhancing-a-PoS-system
 ```
 
-## Requirements
+Install required packages:
 
-- Python 3.8+
-- langchain-text-splitters
-- langchain-community
-- scikit-learn
-- faiss-cpu (or faiss-gpu)
-- rank-bm25
-- transformers
-- torch
-- numpy
-
-Install all: `pip install -r requirements.txt`
-
-## How It Works
-
-1. **Document Loading**: Load .txt files from a directory
-2. **Chunking**: Split documents using selected strategy
-3. **Embedding**: Convert chunks to vectors using embedding model
-4. **Indexing**: Build FAISS and BM25 indices for fast retrieval
-5. **Retrieval**: Find relevant chunks using chosen method
-6. **Generation**: Generate answer with LLM using retrieved context
-
-## Example Workflow
-
-```python
-# 1. Initialize
-rag = RAGPipeline()
-
-# 2. Create knowledge base
-docs = get_documents("./documents")
-rag.create_knowledge_base(docs)
-
-# 3. Query
-context = rag.similarity_search("What is X?", method="hybrid", top_k=3)
-
-# 4. Generate
-response = rag.generate_response("What is X?", context)
-print(response)
-
-# 5. Add more docs later
-new_docs = [...]
-rag.add_documents(new_docs)
+```bash
+pip install pandas numpy scikit-learn jupyter matplotlib seaborn
 ```
+
+## Usage
+
+Open the Jupyter notebooks to explore the analysis:
+
+```bash
+jupyter notebook Sales_Forecasting.ipynb
+jupyter notebook online_payments_fraud_detection.ipynb
+```
+
+## Technologies Used
+
+- Python 3.x
+- Pandas - Data manipulation
+- NumPy - Numerical computing
+- Scikit-learn - Machine learning
+- Jupyter Notebook - Interactive analysis
+- Matplotlib/Seaborn - Visualization
+
+## Key Findings
+
+**Sales Analysis:**
+- Historical trends across product categories
+- Regional and seasonal patterns
+- Customer segment performance metrics
+
+**Fraud Detection:**
+- Transaction classification with Random Forest
+- Parameter optimization for model performance
+- Hyperparameter ranges tested:
+  - n_estimators: Variable range
+  - max_depth: Variable range
+
+## How to Use Results
+
+1. **Sales Forecasting**: Use predictions for demand planning and stock optimization
+2. **Fraud Detection**: Deploy model to flag suspicious transactions in real-time
 
 ## License
 
-MIT License - see LICENSE file for details.
+MIT License
 
 ## Citation
 
 ```bibtex
-@software{rag_implementation_2025,
-  title={RAG Implementation from Scratch},
+@software{pos_enhancement_2024,
+  title={Enhancing a PoS System},
   author={Ani-404},
-  year={2025},
-  url={https://github.com/Ani-404/RAG-implementation-from-scratch}
+  year={2024},
+  url={https://github.com/Ani-404/Enhancing-a-PoS-system}
 }
 ```
